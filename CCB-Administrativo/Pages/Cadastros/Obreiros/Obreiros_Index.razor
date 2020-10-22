@@ -1,0 +1,45 @@
+@page "/obreiros"
+@inherits API
+
+<section class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Obreiros</h3>
+        </div>
+        
+        <div class="col-md-6">
+            <a href="/obreiros/novo" class="btn">Novo</a>
+        </div>
+    </div>
+    
+    @if (Obreiros is null)
+    {
+        <p>Carregando...</p>
+    }
+    else if (Obreiros.Count() == 0)
+    {
+        <p>Não há obreiros cadastrados</p>
+    }
+    else
+    {
+        <div class="listIndex">
+            <ul>
+                @foreach (var obreiro in Obreiros)
+                {
+                    <li>
+                        <a href="/obreiros/editar/@obreiro.ID">@obreiro.Nome</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</section>
+
+@code {
+    public List<Obreiro> Obreiros { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Obreiros = await GetObreiros();
+    }
+}

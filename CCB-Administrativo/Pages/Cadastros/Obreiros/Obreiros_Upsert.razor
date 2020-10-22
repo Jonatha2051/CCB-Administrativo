@@ -1,0 +1,79 @@
+@page "/obreiros/novo"
+@page "/obreiros/editar/{id:int}"
+@inherits API
+
+<section>
+    <h3>Cadastro de Obreiro(a)</h3>
+
+    <EditForm Model="Obreiro" OnValidSubmit="Confirmation" OnInvalidSubmit="ConfirmationError" class="row">
+        <DataAnnotationsValidator />
+
+        <div class="col-md-6">
+            <label>Nome</label>
+            <input type="text" @bind="Obreiro.Nome" />
+
+            <ValidationMessage For="(() => Obreiro.Nome)" />
+        </div>
+
+        <div class="col-md-6">
+            <label for="status">Status:</label>
+            <input type="checkbox" id="status" @bind="Obreiro.Status" value="@(Obreiro.Status ? "Obreiro(a) Ativa" : "Obreiro(a) Inativo")" />
+
+            <ValidationMessage For="(() => Obreiro.Status)" />
+        </div>
+
+        <div class="col-md-12">
+            <button type="submit">Salvar</button>
+            <a href="/obreiros")">Listagem</a>
+        </div>
+    </EditForm>
+</section>
+
+@code {
+    [Parameter] public int ID { get; set; }
+
+    public Obreiro Obreiro { get; set; }
+
+    #region INITIALIZATION
+    protected override async Task OnInitializedAsync()
+    {
+        if (ID == 0) await Insert();
+        else await Update();
+    }
+
+    public async Task Insert()
+    {
+        Obreiro = new Obreiro { ID = 0, Status = true };
+    }
+
+    public async Task Update()
+    {
+        Obreiro = await GetObreiro(ID);
+    }
+    #endregion
+
+    #region CONFIRMATION
+    public async Task Confirmation()
+    {
+        if (ID == 0) await SendSave();
+        else await SendUpdate();
+    }
+
+    public async Task ConfirmationError(EditContext context)
+    {
+
+    }
+
+    public async Task SendSave()
+    {
+        await PostObreiro(Obreiro);
+        Navigation.NavigateTo($"{Navigation.BaseUri}obreiros");
+    }
+
+    public async Task SendUpdate()
+    {
+        await PutObreiro(Obreiro);
+        Navigation.NavigateTo($"{Navigation.BaseUri}obreiros");
+    }
+    #endregion
+}

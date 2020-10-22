@@ -3,15 +3,17 @@ using System;
 using CCB_Administrativo.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CCB_Administrativo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201021230111_Congregacoes_Obreiros")]
+    partial class Congregacoes_Obreiros
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,9 +111,6 @@ namespace CCB_Administrativo.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(120)")
                         .HasMaxLength(120);
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("boolean");
 
                     b.HasKey("ID");
 

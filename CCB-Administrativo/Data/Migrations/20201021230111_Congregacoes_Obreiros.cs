@@ -1,10 +1,10 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace CCB_Administrativo.Data.Migrations
+namespace CCB_Administrativo.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class Congregacoes_Obreiros : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,11 +48,39 @@ namespace CCB_Administrativo.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cidades",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(maxLength: 120, nullable: false),
+                    Estado = table.Column<string>(maxLength: 30, nullable: true),
+                    UF = table.Column<string>(maxLength: 2, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cidades", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Obreiros",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nome = table.Column<string>(maxLength: 120, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Obreiros", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -73,7 +101,7 @@ namespace CCB_Administrativo.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -153,6 +181,55 @@ namespace CCB_Administrativo.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Congregacoes",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CidadeID = table.Column<int>(nullable: false),
+                    Descricao = table.Column<string>(maxLength: 50, nullable: false),
+                    Logradouro = table.Column<string>(nullable: true),
+                    Numero = table.Column<string>(nullable: true),
+                    Bairro = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Congregacoes", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Congregacoes_Cidades_CidadeID",
+                        column: x => x.CidadeID,
+                        principalTable: "Cidades",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CongregacoesObreiros",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CongregacaoID = table.Column<int>(nullable: false),
+                    ObreiroID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CongregacoesObreiros", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_CongregacoesObreiros_Congregacoes_CongregacaoID",
+                        column: x => x.CongregacaoID,
+                        principalTable: "Congregacoes",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CongregacoesObreiros_Obreiros_ObreiroID",
+                        column: x => x.ObreiroID,
+                        principalTable: "Obreiros",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -162,8 +239,7 @@ namespace CCB_Administrativo.Data.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -189,8 +265,22 @@ namespace CCB_Administrativo.Data.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Congregacoes_CidadeID",
+                table: "Congregacoes",
+                column: "CidadeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CongregacoesObreiros_CongregacaoID",
+                table: "CongregacoesObreiros",
+                column: "CongregacaoID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CongregacoesObreiros_ObreiroID",
+                table: "CongregacoesObreiros",
+                column: "ObreiroID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,10 +301,22 @@ namespace CCB_Administrativo.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CongregacoesObreiros");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Congregacoes");
+
+            migrationBuilder.DropTable(
+                name: "Obreiros");
+
+            migrationBuilder.DropTable(
+                name: "Cidades");
         }
     }
 }

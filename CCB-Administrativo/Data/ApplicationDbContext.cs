@@ -11,6 +11,12 @@ namespace CCB_Administrativo.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+
         }
+
+        public DbSet<Congregacao> Congregacoes { get; set; }
+        public DbSet<Obreiro> Obreiros { get; set; }
+        public DbSet<CongregacaoObreiro> CongregacoesObreiros { get; set; }
+        public DbSet<Cidade> Cidades { get; set; }
     }
 }

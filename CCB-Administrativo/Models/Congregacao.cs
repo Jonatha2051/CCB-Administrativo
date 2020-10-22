@@ -19,7 +19,7 @@ namespace CCB_Administrativo.Models
         public int CidadeID { get; set; }
         public Cidade Cidade { get; set; }
 
-        public ICollection<Obreiro> Obreiros { get; set; }
+        public ICollection<CongregacaoObreiro> Obreiros { get; set; }
         #endregion
 
         #region VARIABLES
